@@ -171,10 +171,10 @@ router.post("/users/contacts/:email", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 //change users contact name
-router.put("/users/name/:id", (req, res) => {
-  const { id } = req.params;
+router.put("/users/name/:email", (req, res) => {
+  const { email } = req.params;
   const { name, newName } = req.body;
-  User.findOne({ _id: id })
+  User.findOne({ email })
     .then((data) => {
       aray = ChangeContact(newName, name, "name", data.contacts);
 
@@ -188,12 +188,12 @@ router.put("/users/name/:id", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 //change users contact surrname
-router.put("/users/surrname/:id", (req, res) => {
-  const { id } = req.params;
-  const { surrname, newName } = req.body;
-  User.findOne({ _id: id })
+router.put("/users/surrname/:email", (req, res) => {
+  const { email } = req.params;
+  const { name, newName } = req.body;
+  User.findOne({ email })
     .then((data) => {
-      aray = ChangeContact(newName, surrname, "surrname", data.contacts);
+      aray = ChangeContact(newName, name, "surrname", data.contacts);
 
       data.contacts = [];
       data.contacts = aray;
@@ -205,12 +205,12 @@ router.put("/users/surrname/:id", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 //change users contact adress
-router.put("/users/address/:id", (req, res) => {
-  const { id } = req.params;
-  const { address, newName } = req.body;
-  User.findOne({ _id: id })
+router.put("/users/address/:email", (req, res) => {
+  const { email } = req.params;
+  const { name, newName } = req.body;
+  User.findOne({ email: email })
     .then((data) => {
-      aray = ChangeContact(newName, address, "address", data.contacts);
+      aray = ChangeContact(newName, name, "address", data.contacts);
 
       data.contacts = [];
       data.contacts = aray;
@@ -222,12 +222,12 @@ router.put("/users/address/:id", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 //change users contact phone
-router.put("/users/phoneNumber/:id", (req, res) => {
-  const { id } = req.params;
-  const { phoneNumber, newName } = req.body;
-  User.findOne({ _id: id })
+router.put("/users/phoneNumber/:email", (req, res) => {
+  const { email } = req.params;
+  const { name, newName } = req.body;
+  User.findOne({ email: email })
     .then((data) => {
-      aray = ChangeContact(newName, phoneNumber, "phoneNumber", data.contacts);
+      aray = ChangeContact(newName, name, "phoneNumber", data.contacts);
 
       data.contacts = [];
       data.contacts = aray;

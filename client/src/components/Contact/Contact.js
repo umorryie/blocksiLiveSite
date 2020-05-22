@@ -42,18 +42,41 @@ export default class Contact extends Component {
           <div className="cname">
             <div className="inline">
               <h3>Name:</h3> <div>{this.props.name}</div>
+              <FontAwesomeIcon
+                onClick={() => this.props.window("name", this.props.name)}
+                className="plusCircle1"
+                size="1x"
+                color="green"
+                icon="sync"
+              />
             </div>
           </div>
           <div className="csurrname">
             <div className="inline">
               {" "}
               <h3>Surrname:</h3> <div>{this.props.surrname}</div>
+              <FontAwesomeIcon
+                onClick={() =>
+                  this.props.window("surrname", this.props.surrname)
+                }
+                className="plusCircle1"
+                size="1x"
+                color="green"
+                icon="sync"
+              />
             </div>
           </div>
           <div className="caddress">
             <div className="inline">
               <h3>Address:</h3>
               <div> {this.props.address}</div>
+              <FontAwesomeIcon
+                onClick={() => this.props.window("address", this.props.address)}
+                className="plusCircle1"
+                size="1x"
+                color="green"
+                icon="sync"
+              />
             </div>
           </div>
           <div className="cphoneNumber">
@@ -61,18 +84,20 @@ export default class Contact extends Component {
               {" "}
               <h3>Phonenumber:</h3>
               <div> {this.props.phoneNumber}</div>
+              <FontAwesomeIcon
+                onClick={() =>
+                  this.props.window("phoneNumber", this.props.phoneNumber)
+                }
+                className="plusCircle1"
+                size="1x"
+                color="green"
+                icon="sync"
+              />
             </div>
           </div>
         </div>
         <div className="gumba">
-          <div>
-            <FontAwesomeIcon
-              className="plusCircle"
-              size="2x"
-              color="green"
-              icon="sync"
-            />
-          </div>
+          <div></div>
           <div>
             <FontAwesomeIcon
               className="plusCircle"

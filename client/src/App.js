@@ -45,9 +45,7 @@ export default class App extends Component {
       fetch(`/users/${this.state.email}`)
         .then((re) => re.json())
         .then((data) => {
-          console.log(data);
           this.setState({ contacts: data });
-          console.log(this.state);
         });
     }
   };
@@ -77,9 +75,7 @@ export default class App extends Component {
       .then((res) => res.json())
       .then((data) => {
         let lol = "";
-        console.log(data.contacts);
         data.contacts.forEach((el) => (lol += el.name));
-        console.log(lol);
         this.setState({ contacts: data.contacts });
       });
   };
@@ -107,12 +103,28 @@ export default class App extends Component {
     });
     this.changeButton();
     this.refresh();
+    this.setState({ name: "", address: "", phoneNumber: "", surrname: "" });
     this.refresh();
   };
+  window = (prop, newword) => {
+    const tekst = prompt(`Enter new ${prop}: `);
+    const objekt = { name: newword, newName: tekst };
+    fetch(`/users/${prop}/${this.state.email}`, {
+      method: "put",
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        "Content-Type": "application/json",
+      },
 
+      body: JSON.stringify(objekt),
+    });
+    this.refresh();
+    this.refresh();
+  };
   render() {
     let contactss = this.state.contacts.map((el, i) => (
       <Contact
+        window={this.window}
         deleteFromContacts={this.deleteFromContacts}
         key={i}
         name={el.name}
@@ -125,7 +137,7 @@ export default class App extends Component {
       <Router>
         <Navbar />
         <div className="appcontainer1">
-          {this.state.logged ? (
+          {this.state.logged && !this.state.button ? (
             <div>
               <FontAwesomeIcon
                 onClick={this.changeButton}
@@ -139,7 +151,7 @@ export default class App extends Component {
             ""
           )}
           {this.state.button ? (
-            <div>
+            <div className="form">
               {
                 <form onSubmit={this.onSubmitChange}>
                   <label>

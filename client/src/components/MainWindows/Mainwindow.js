@@ -6,7 +6,7 @@ export default class Mainwindow extends Component {
     this.state = { contacts: [] };
   }
   componentDidMount() {
-    //this.props.getContacts().then(console.log);
+    //this.props.getContacts()
     console.log(this.props.contacts);
   }
   render() {
