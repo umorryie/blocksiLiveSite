@@ -2,39 +2,24 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const Schema = mongoose.Schema;
 
-const UniqueProduct = new Schema({
+const Contacts = new Schema({
   name: {
     type: String,
     required: true,
-    validate(ime) {
-      if ((typeof ime).toLowerCase() !== "string" || ime === " ") {
-        throw new Error("Name must be string.");
-      }
-    },
   },
-  price: {
-    type: Number,
-    required: true,
-    validate(cena) {
-      if ((typeof cena).toLowerCase() !== "number") {
-        throw new Error("Price must be number.");
-      }
-    },
-  },
-  available: {
-    type: Boolean,
+  surrname: {
+    type: String,
     required: true,
   },
-  dateCreated: {
-    type: Date,
-    default: new Date(),
-  },
-  productID: {
-    type: Number,
+  address: {
+    type: String,
     required: true,
-    unique: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
   },
 });
 
-const Product = mongoose.model("Product", UniqueProduct);
-module.exports = Product;
+const Contact = mongoose.model("Contact", Contacts);
+module.exports = Contact;
