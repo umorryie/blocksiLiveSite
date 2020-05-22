@@ -1,12 +1,23 @@
 import React, { Component } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCoffee,
+  faCircle,
+  faPlusCircle,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faKey } from "@fortawesome/free-solid-svg-icons";
+library.add(faEnvelope, faKey, faCircle, faPlusCircle, faTrash, faSync);
 export default class Contact extends Component {
   constructor(props) {
     super(props);
     this.state = { email: this.props.email };
   }
   componentDidMount() {
-    fetch(`/users`)
+    {
+      /*fetch(`/users`)
       .then((re) => re.json())
       .then((data) => {
         let novi = [];
@@ -20,9 +31,61 @@ export default class Contact extends Component {
           return novi;
         }
       })
-      .then((el) => console.log("el[0]), this.state.email"));
+    .then((el) => console.log("el[0]), this.state.email"));*/
+    }
   }
   render() {
-    return <div>Contact</div>;
+    return (
+      <div className="contactContainer">
+        <div className="tekst">
+          {" "}
+          <div className="cname">
+            <div className="inline">
+              <h3>Name:</h3> <div>{this.props.name}</div>
+            </div>
+          </div>
+          <div className="csurrname">
+            <div className="inline">
+              {" "}
+              <h3>Surrname:</h3> <div>{this.props.surrname}</div>
+            </div>
+          </div>
+          <div className="caddress">
+            <div className="inline">
+              <h3>Address:</h3>
+              <div> {this.props.address}</div>
+            </div>
+          </div>
+          <div className="cphoneNumber">
+            <div className="inline">
+              {" "}
+              <h3>Phonenumber:</h3>
+              <div> {this.props.phoneNumber}</div>
+            </div>
+          </div>
+        </div>
+        <div className="gumba">
+          <div>
+            <FontAwesomeIcon
+              className="plusCircle"
+              size="2x"
+              color="green"
+              icon="sync"
+            />
+          </div>
+          <div>
+            <FontAwesomeIcon
+              className="plusCircle"
+              size="2x"
+              color="red"
+              icon="trash"
+              onClick={() => {
+                this.props.deleteFromContacts(this.props.surrname);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 }

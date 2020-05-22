@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: rgb(65, 64, 64);
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbarcontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ulnavbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.linavbar {
+  text-decoration: none;
+  list-style: none;
+  color: white;
+  padding: 0 100px;
+  font-weight: 500;
+  font-size: 3vh;
+}
+.appcontainer1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.appcontainer {
+}
+.contactContainer {
+  margin: 20px;
+  width: 80vw;
+  display: flex;
+  flex-grow: 1;
+  box-shadow: 5px 5px 5px grey;
+}
+.inline {
+  display: flex;
+}
+h3 {
+  padding-right: 1.4vw;
+}
+.buttt {
+  margin: 40px;
+  width: 20vw;
+  height: 5vh;
+}
+.plusCircle {
+  margin: 30px;
+}
+.gumba {
+  display: flex;
+  flex-grow: 0.6;
+  margin: auto;
+
+  justify-content: flex-end;
+}

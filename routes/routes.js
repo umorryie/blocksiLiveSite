@@ -240,10 +240,10 @@ router.put("/users/phoneNumber/:id", (req, res) => {
 });
 
 // delete contact of user by surrname
-router.delete("/users/surrname/:id", (req, res) => {
-  const { id } = req.params;
+router.delete("/users/surrname/:email", (req, res) => {
+  const { email } = req.params;
   const { surrname } = req.body;
-  User.findOne({ _id: id })
+  User.findOne({ email: email })
     .then((data) => {
       data.contacts = deleteContact(surrname, "surrname", data.contacts);
       data.save();
