@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
+
 const Contact = require("../products/Producs");
 const User = require("../products/User");
 const users = require("../productsListForDataBase");
@@ -88,29 +90,26 @@ router.put("/users/:id", (req, res) => {
   }
 });
 
-// add contact to user with certain id
-router.post("/users/:id", (req, res) => {
-  const { name, surrname, address, phoneNumber } = req.body;
-  const { id } = req.params;
-  const arayNames = ["name", "surrname", "address", "phoneNumber"];
-  const aray = [name, surrname, address, phoneNumber];
+// add new user to db
+router.post("/users", (req, res) => {
+  const { name, email, password, contacts } = req.body;
 
-  let objekt = {};
-  let k = 0;
-  aray.forEach((el, i) => {
-    if (el) {
-      k++;
-      objekt[arayNames[i]] = el;
-    }
-  });
-  User.findOne({ _id: id })
-    .then((data) => {
-      data.contacts = [...data.contacts, objekt];
-      data.save();
-      return data;
-    })
-    .then((e) => res.json(e))
-    .catch((err) => res.status(400).json(err));
+  const arayNames = ["name", "email", "password", "contacts"];
+  const aray = [name, email, password, contacts];
+  const arrayy = aray.filter((el) => el !== undefined);
+  if (arrayy.length !== 4) {
+    res.status(400).json("Not all parameters are  given.");
+    return;
+  } else {
+    let objekt = { name, email, password, contacts };
+
+    const novi = User(objekt);
+    console.log(objekt);
+    novi
+      .save()
+      .then((e) => res.json(e))
+      .catch((err) => res.status(400).json(err));
+  }
 });
 // add contact to user with certain id
 router.post("/users/contact/:id", (req, res) => {
@@ -239,5 +238,11 @@ const ChangeContact = (newName, name, change, aray) => {
   });
   return array;
 };
-
+router.get("/checkLogin/:email", async (req, res) => {
+  const { email } = await req.params;
+  const { password } = req.body;
+  const userr = await User.findOne({ email });
+  const isItTheSame = await bcrypt.compare(password, userr.password);
+  (await isItTheSame) ? res.json(true) : res.json(false);
+});
 module.exports = router;
