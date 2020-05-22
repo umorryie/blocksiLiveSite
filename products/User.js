@@ -37,6 +37,7 @@ const Users = new Schema({
   },
   contacts: {
     type: Array,
+    default: [],
   },
 });
 

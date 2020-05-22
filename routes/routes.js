@@ -15,6 +15,17 @@ router.get("/users", (req, res) => {
     )
     .catch((err) => res.status(400).json(err));
 });
+// get user by email
+router.get("/users/:email", (req, res) => {
+  const { email } = req.params;
+  User.findOne({ email: email })
+    .then((response) =>
+      response
+        ? res.json(response)
+        : res.status(400).json(`Users base iz empty`)
+    )
+    .catch((err) => res.status(400).json(err));
+});
 //get all contacts of user with certain id
 router.get("/users/contacts/:id", (req, res) => {
   const { id } = req.params;
@@ -97,7 +108,7 @@ router.post("/users", (req, res) => {
   const arayNames = ["name", "email", "password", "contacts"];
   const aray = [name, email, password, contacts];
   const arrayy = aray.filter((el) => el !== undefined);
-  if (arrayy.length !== 4) {
+  if (arrayy.length < 3) {
     res.status(400).json("Not all parameters are  given.");
     return;
   } else {
@@ -127,6 +138,30 @@ router.post("/users/contact/:id", (req, res) => {
     }
   });
   User.findOne({ _id: id })
+    .then((data) => {
+      data.contacts = [...data.contacts, objekt];
+      data.save();
+      return data;
+    })
+    .then((e) => res.json(e))
+    .catch((err) => res.status(400).json(err));
+});
+// add contact to user with certain email
+router.post("/users/contacts/:email", (req, res) => {
+  const { name, surrname, address, phoneNumber } = req.body;
+  const { email } = req.params;
+  const arayNames = ["name", "surrname", "address", "phoneNumber"];
+  const aray = [name, surrname, address, phoneNumber];
+
+  let objekt = {};
+  let k = 0;
+  aray.forEach((el, i) => {
+    if (el) {
+      k++;
+      objekt[arayNames[i]] = el;
+    }
+  });
+  User.findOne({ email: email })
     .then((data) => {
       data.contacts = [...data.contacts, objekt];
       data.save();
@@ -238,11 +273,16 @@ const ChangeContact = (newName, name, change, aray) => {
   });
   return array;
 };
-router.get("/checkLogin/:email", async (req, res) => {
+//check is password matches with hashed one
+router.post("/checkLogin/:email", async (req, res) => {
   const { email } = await req.params;
   const { password } = req.body;
   const userr = await User.findOne({ email });
-  const isItTheSame = await bcrypt.compare(password, userr.password);
-  (await isItTheSame) ? res.json(true) : res.json(false);
+  if ((await userr) === null) {
+    await res.status(404).json("User not found");
+  } else {
+    const isItTheSame = await bcrypt.compare(password, userr.password);
+    (await isItTheSame) ? res.json(true) : res.json(false);
+  }
 });
 module.exports = router;
