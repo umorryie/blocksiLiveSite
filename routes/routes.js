@@ -243,10 +243,10 @@ router.put("/users/phoneNumber/:email", (req, res) => {
 // delete contact of user by surrname
 router.delete("/users/surrname/:email", (req, res) => {
   const { email } = req.params;
-  const { surrname } = req.body;
+  const { surrname, name } = req.body;
   User.findOne({ email: email })
     .then((data) => {
-      data.contacts = deleteContact(surrname, "surrname", data.contacts);
+      data.contacts = deleteContact(name, surrname, "surrname", data.contacts);
       data.save();
       return data;
     })
@@ -254,10 +254,12 @@ router.delete("/users/surrname/:email", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 
-const deleteContact = (name, change, aray) => {
+const deleteContact = (name1, name2, change, aray) => {
   let array = [];
   aray.forEach((el, i) => {
-    if (el[change] !== name) {
+    if (el[change] === name2 && el["name"] === name1) {
+      array = [...array];
+    } else {
       array = [...array, el];
     }
   });

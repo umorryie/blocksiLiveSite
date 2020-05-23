@@ -67,7 +67,10 @@ export default class Table extends Component {
                 "Are you sure you want to delete this contact?"
               );
               if (answer) {
-                this.props.deleteFromContacts(this.props.surrname);
+                this.props.deleteFromContacts(
+                  this.props.surrname,
+                  this.props.name
+                );
               }
             }}
           />

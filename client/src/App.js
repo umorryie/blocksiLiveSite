@@ -93,7 +93,7 @@ export default class App extends Component {
   componentDidMount() {
     //this.getContacts();
   }
-  deleteFromContacts = (surrname) => {
+  deleteFromContacts = (surrname, name) => {
     fetch(`/users/surrname/${this.state.email}`, {
       method: "delete",
       mode: "cors", // no-cors, *cors, same-origin
@@ -101,7 +101,7 @@ export default class App extends Component {
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify({ surrname: surrname }),
+      body: JSON.stringify({ surrname, name }),
     })
       .then((res) => res.json())
       .then((el) => this.refresh()); //)
@@ -160,20 +160,26 @@ export default class App extends Component {
   onSubmitChange = (e) => {
     e.preventDefault();
     const { name, address, phoneNumber, surrname } = this.state;
-    const object = { name, address, phoneNumber, surrname };
-    fetch(`/users/contacts/${this.state.email}`, {
-      method: "post",
-      mode: "cors", // no-cors, *cors, same-origin
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const ary = [name, address, phoneNumber, surrname];
+    const validateor = ary.filter((el) => el !== "");
+    if (validateor.length === 4) {
+      const object = { name, address, phoneNumber, surrname };
+      fetch(`/users/contacts/${this.state.email}`, {
+        method: "post",
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      body: JSON.stringify(object),
-    });
-    this.changeButton();
-    this.refresh();
-    this.setState({ name: "", address: "", phoneNumber: "", surrname: "" });
-    this.refresh();
+        body: JSON.stringify(object),
+      });
+      this.changeButton();
+      this.refresh();
+      this.setState({ name: "", address: "", phoneNumber: "", surrname: "" });
+      this.refresh();
+    } else {
+      alert("Not all fields are filled!");
+    }
   };
 
   onSubmitChange1 = (e) => {
