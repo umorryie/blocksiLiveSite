@@ -118,7 +118,7 @@ router.post("/users", (req, res) => {
     console.log(objekt);
     novi
       .save()
-      .then((e) => res.json(e))
+      .then((e) => res.json("good"))
       .catch((err) => res.status(400).json(err));
   }
 });
@@ -283,6 +283,18 @@ router.post("/checkLogin/:email", async (req, res) => {
   } else {
     const isItTheSame = await bcrypt.compare(password, userr.password);
     (await isItTheSame) ? res.json(true) : res.json(false);
+  }
+});
+router.post("/checkLoginRegular/:email", async (req, res) => {
+  const { email } = await req.params;
+
+  const { password } = req.body;
+  const userr = await User.findOne({ email });
+  if ((await userr) === null) {
+    await res.status(404).json("User not found");
+  } else {
+    console.log(password, userr.password);
+    (await userr.password) === password ? res.json(true) : res.json(false);
   }
 });
 module.exports = router;

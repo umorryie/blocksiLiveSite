@@ -40,13 +40,15 @@ const Users = new Schema({
     default: [],
   },
 });
-
-Users.pre("save", async function (next) {
-  if (this.password) {
-    this.password = await bcrypt.hash(this.password, 8);
-  }
-  next();
-});
+//______________________________________________________________________
+// commented because it is chaning and its not working
+//Users.pre("save", async function (next) {
+//if (this.password) {
+//  this.password = await bcrypt.hash(this.password, 8);
+// }
+// next();
+//});
+//______________________________________________________________________
 /*
 async function checkUser(id, pw) {
   //... fetch user from a db etc.

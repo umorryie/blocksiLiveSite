@@ -21,18 +21,49 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      logged: true,
-      email: "test@test.test",
+      clickLog: false,
+      logged: false,
+      email: "",
       contacts: [],
       button: false,
       name: "",
       surrname: "",
       address: "",
       phoneNumber: "",
+      passwordforLogin: "",
+      emailforLogin: "",
+      clickRegister: false,
+      registername: "",
+      registerpassword: "",
+      registeremail: "",
     };
   }
+  spremeni = () => {
+    this.setState({
+      clickLog: false,
+      logged: false,
+      email: "",
+      contacts: [],
+      button: false,
+      name: "",
+      surrname: "",
+      address: "",
+      phoneNumber: "",
+      passwordforLogin: "",
+      emailforLogin: "",
+      clickRegister: false,
+      registername: "",
+      registerpassword: "",
+      registeremail: "",
+    });
+  };
+  changeClickRegister = () => {
+    this.setState({ clickRegister: !this.state.clickRegister });
+  };
   changeLogged = () => {
     this.setState({ logged: !this.state.logged });
+    this.refresh();
+    this.refresh();
   };
   changeEmailOn = (email) => {
     this.setState({ email });
@@ -82,7 +113,35 @@ export default class App extends Component {
   changeButton = () => {
     this.setState({ button: !this.state.button });
   };
+  onSubmitChange2 = (e) => {
+    e.preventDefault();
+    const { registername, registeremail, registerpassword } = this.state;
+    const object = {
+      name: registername,
+      email: registeremail,
+      password: registerpassword,
+    };
+    fetch("/users", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        "Content-Type": "application/json",
+      },
 
+      body: JSON.stringify(object),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data === "good") {
+          this.changeEmailOn(registeremail);
+          this.changeLogged();
+          this.changeClickRegister();
+        } else {
+          alert("Something went wrong. Register declined");
+        }
+      })
+      .catch((er) => console.log(er));
+  };
   onTextChange = (e) => {
     const value = e.target.value;
     const { name } = e.target;
@@ -106,6 +165,43 @@ export default class App extends Component {
     this.setState({ name: "", address: "", phoneNumber: "", surrname: "" });
     this.refresh();
   };
+
+  onSubmitChange1 = (e) => {
+    e.preventDefault();
+
+    const { passwordforLogin, emailforLogin } = this.state;
+    const object = { password: passwordforLogin };
+    fetch(`/checkLoginRegular/${emailforLogin}`, {
+      method: "post",
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(object),
+    })
+      .then((re) => re.json())
+      .then((data) => {
+        if (data === true) {
+          this.changeEmailOn(emailforLogin);
+          this.changeLogged();
+        } else if (data === false) {
+          alert("Wrong password");
+        } else {
+          alert("Not registered yet");
+        }
+      });
+    //this.changeButton();
+    //this.refresh();
+    //this.setState({ name: "", address: "", phoneNumber: "", surrname: "" });
+    // this.refresh();
+  };
+  emptyContacts = () => {
+    this.setState({ contacts: [] });
+  };
+  changeclickLog = () => {
+    this.setState({ clickLog: !this.state.clickLog });
+  };
   window = (prop, newword) => {
     const tekst = prompt(`Enter new ${prop}: `);
     const objekt = { name: newword, newName: tekst };
@@ -121,6 +217,7 @@ export default class App extends Component {
     this.refresh();
     this.refresh();
   };
+
   render() {
     let contactss = this.state.contacts.map((el, i) => (
       <Contact
@@ -135,7 +232,45 @@ export default class App extends Component {
     ));
     return (
       <Router>
-        <Navbar />
+        <Navbar
+          spremeni={this.spremeni}
+          changeClickRegister={this.changeClickRegister}
+          refresh={this.refresh}
+          emptyContacts={this.emptyContacts}
+          deleteEmail={this.deleteEmail}
+          logged={this.state.logged}
+          changeLogged={this.changeLogged}
+          changeclickLog={this.changeclickLog}
+        />
+        <div className="koseloginamo">
+          {this.state.clickLog && !this.state.logged ? (
+            <div>
+              {
+                <form onSubmit={this.onSubmitChange1}>
+                  <label>
+                    Email:
+                    <input
+                      onChange={this.onTextChange}
+                      type="text"
+                      name="emailforLogin"
+                    />
+                  </label>
+                  <label>
+                    Password:
+                    <input
+                      onChange={this.onTextChange}
+                      type="password"
+                      name="passwordforLogin"
+                    />
+                  </label>
+                  <input type="submit" value="Submit" />
+                </form>
+              }
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
         <div className="appcontainer1">
           {this.state.logged && !this.state.button ? (
             <div>
@@ -146,6 +281,41 @@ export default class App extends Component {
                 color="green"
                 icon="plus-circle"
               />
+            </div>
+          ) : (
+            ""
+          )}{" "}
+          {this.state.clickRegister ? (
+            <div>
+              {
+                <form onSubmit={this.onSubmitChange2}>
+                  <label>
+                    Name:
+                    <input
+                      onChange={this.onTextChange}
+                      type="text"
+                      name="registername"
+                    />
+                  </label>
+                  <label>
+                    Email:
+                    <input
+                      onChange={this.onTextChange}
+                      type="text"
+                      name="registeremail"
+                    />
+                  </label>
+                  <label>
+                    Password:
+                    <input
+                      onChange={this.onTextChange}
+                      type="password"
+                      name="registerpassword"
+                    />
+                  </label>
+                  <input type="submit" value="Submit" />
+                </form>
+              }
             </div>
           ) : (
             ""
@@ -195,58 +365,11 @@ export default class App extends Component {
           )}
         </div>
         <div className="appcontainer1">
-          <div className="appcontainer">{contactss}</div>
+          <div className="appcontainer">
+            {this.state.logged ? contactss : ""}
+          </div>
         </div>
       </Router>
     );
   }
-}
-
-{
-  /*<div className="App">
-{this.state.logged ? (
-  <Mainwindow
-    contacts={this.state.contacts}
-    getContacts={this.getContacts}
-    email={this.state.email}
-    deleteEmail={this.deleteEmail}
-    changeEmailOn={this.changeEmailOn}
-    changeLogged={this.changeLogged}
-    logged={this.state.logged}
-  />
-) : (
-  <Switch>
-    <Route path="/login" exact>
-      <Login
-        contacts={this.state.contacts}
-        getContacts={this.getContacts}
-        email={this.state.email}
-        deleteEmail={this.deleteEmail}
-        changeEmailOn={this.changeEmailOn}
-        changeLogged={this.changeLogged}
-        logged={this.state.logged}
-      />
-    </Route>
-    <Route path="/" exact>
-      <Link to="/login">Login</Link>
-      <Link to="/register">Register</Link>
-    </Route>
-    <Route path="/register" exact>
-      <Register
-        contacts={this.state.contacts}
-        getContacts={this.getContacts}
-        email={this.state.email}
-        deleteEmail={this.deleteEmail}
-        changeEmailOn={this.changeEmailOn}
-        changeLogged={this.changeLogged}
-        logged={this.state.logged}
-      />
-    </Route>
-    <Route path="/mainwindow">
-      <Mainwindow />
-    </Route>
-  </Switch>
-)}
-</div>}
-*/
 }
