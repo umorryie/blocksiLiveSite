@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
+import ozadje from "./images/ozadje.jpg";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
+import Table from "./components/Table/Table";
+//import { browserHistory } from "react-router";
+import { withRouter } from "react-router";
+import { Redirect } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Input from "./components/Input/Input";
 import {
@@ -9,6 +14,7 @@ import {
   faCircle,
   faPlusCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { createBrowserHistory } from "history";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEnvelope, faKey } from "@fortawesome/free-solid-svg-icons";
 import Mainwindow from "./components/MainWindows/Mainwindow";
@@ -17,6 +23,7 @@ import Register from "./components/Register/Register";
 import Login from "./components/LogIn/Login";
 import Navbar from "./components/Navbar/Navbar";
 library.add(faEnvelope, faKey, faCircle, faPlusCircle);
+const history = createBrowserHistory();
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +43,8 @@ export default class App extends Component {
       registername: "",
       registerpassword: "",
       registeremail: "",
+      sort: "",
+      surrnamefilta: "",
     };
   }
   spremeni = () => {
@@ -55,6 +64,7 @@ export default class App extends Component {
       registername: "",
       registerpassword: "",
       registeremail: "",
+      surrnamefilta: "",
     });
   };
   changeClickRegister = () => {
@@ -179,7 +189,18 @@ export default class App extends Component {
       },
 
       body: JSON.stringify(object),
-    })
+    }) /*
+    const { passwordforLogin, emailforLogin } = this.state;
+    const object = { password: passwordforLogin, email: emailforLogin };
+    fetch(`/login`, {
+      method: "post",
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(object),
+    })*/
       .then((re) => re.json())
       .then((data) => {
         if (data === true) {
@@ -219,8 +240,30 @@ export default class App extends Component {
   };
 
   render() {
-    let contactss = this.state.contacts.map((el, i) => (
-      <Contact
+    if (this.state.surrnamefilta === "") {
+      let contactss = this.state.contacts.map((el, i) => (
+        <Contact
+          window={this.window}
+          deleteFromContacts={this.deleteFromContacts}
+          key={i}
+          name={el.name}
+          address={el.address}
+          surrname={el.surrname}
+          phoneNumber={el.phoneNumber}
+        />
+      ));
+    }
+    const aray = this.state.contacts.filter((el) => {
+      const beseda = el.surrname.toLowerCase();
+      if (this.state.surrnamefilta === "") {
+        return el;
+      } else {
+        const word = this.state.surrnamefilta.toLowerCase();
+        return beseda.includes(word);
+      }
+    });
+    const table = aray.map((el, i) => (
+      <Table
         window={this.window}
         deleteFromContacts={this.deleteFromContacts}
         key={i}
@@ -230,145 +273,109 @@ export default class App extends Component {
         phoneNumber={el.phoneNumber}
       />
     ));
+
     return (
-      <Router>
-        <Navbar
-          spremeni={this.spremeni}
-          changeClickRegister={this.changeClickRegister}
-          refresh={this.refresh}
-          emptyContacts={this.emptyContacts}
-          deleteEmail={this.deleteEmail}
-          logged={this.state.logged}
-          changeLogged={this.changeLogged}
-          changeclickLog={this.changeclickLog}
-        />
-        <div className="koseloginamo">
-          {this.state.clickLog && !this.state.logged ? (
-            <div>
-              {
-                <form onSubmit={this.onSubmitChange1}>
-                  <label>
-                    Email:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="emailforLogin"
-                    />
-                  </label>
-                  <label>
-                    Password:
-                    <input
-                      onChange={this.onTextChange}
-                      type="password"
-                      name="passwordforLogin"
-                    />
-                  </label>
-                  <input type="submit" value="Submit" />
-                </form>
-              }
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="appcontainer1">
-          {this.state.logged && !this.state.button ? (
-            <div>
-              <FontAwesomeIcon
-                onClick={this.changeButton}
-                className="plusCircle"
-                size="3x"
-                color="green"
-                icon="plus-circle"
+      <Router history={history}>
+        <Switch>
+          <Route path="/" exact>
+            <div className="mainBody ozadjeUserIntercase">
+              <Navbar
+                spremeni={this.spremeni}
+                changeClickRegister={this.changeClickRegister}
+                refresh={this.refresh}
+                emptyContacts={this.emptyContacts}
+                deleteEmail={this.deleteEmail}
+                logged={this.state.logged}
+                changeLogged={this.changeLogged}
+                changeclickLog={this.changeclickLog}
               />
+
+              <div className="appcontainer1">
+                {this.state.logged && !this.state.button ? (
+                  <div>
+                    <div className="sredina">
+                      <button className="add-btn" onClick={this.changeButton}>
+                        ADD CONTACT
+                      </button>
+                    </div>
+                    <div className="surrnameFilter">
+                      <input
+                        onChange={this.onTextChange}
+                        className="surrnamefilta"
+                        type="text"
+                        placeholder="Search by surrname"
+                        name="surrnamefilta"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}{" "}
+                {this.state.button ? (
+                  <Input
+                    onSubmitChange={this.onSubmitChange}
+                    onTextChange={this.onTextChange}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="appcontainer1">
+                <div className="appcontainer">
+                  {this.state.logged ? (
+                    <div>
+                      <div className="contactTable">
+                        <table id="contacts-table">
+                          <thead>
+                            <tr id="contacts-head">
+                              <th className="th naslovnice">NAME</th>
+                              <th className="th naslovnice">SURNAME</th>
+                              <th className="th naslovnice">ADDRESS</th>
+                              <th className="th naslovnice">PHONE NUMBER</th>
+                              <th className="th naslovnice"></th>
+                            </tr>
+                          </thead>
+                          <tbody>{table}</tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
             </div>
-          ) : (
-            ""
-          )}{" "}
-          {this.state.clickRegister ? (
-            <div>
-              {
-                <form onSubmit={this.onSubmitChange2}>
-                  <label>
-                    Name:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="registername"
-                    />
-                  </label>
-                  <label>
-                    Email:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="registeremail"
-                    />
-                  </label>
-                  <label>
-                    Password:
-                    <input
-                      onChange={this.onTextChange}
-                      type="password"
-                      name="registerpassword"
-                    />
-                  </label>
-                  <input type="submit" value="Submit" />
-                </form>
-              }
-            </div>
-          ) : (
-            ""
-          )}
-          {this.state.button ? (
-            <div className="form">
-              {
-                <form onSubmit={this.onSubmitChange}>
-                  <label>
-                    Name:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="name"
-                    />
-                  </label>
-                  <label>
-                    Surrname:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="surrname"
-                    />
-                  </label>
-                  <label>
-                    Address:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="address"
-                    />
-                  </label>
-                  <label>
-                    PhoneNumber:
-                    <input
-                      onChange={this.onTextChange}
-                      type="text"
-                      name="phoneNumber"
-                    />
-                  </label>
-                  <input type="submit" value="Submit" />
-                </form>
-              }
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="appcontainer1">
-          <div className="appcontainer">
-            {this.state.logged ? contactss : ""}
-          </div>
-        </div>
+          </Route>
+
+          <Route
+            exact
+            path="/login"
+            render={() =>
+              this.state.logged ? (
+                <Redirect to="/" />
+              ) : (
+                <Login
+                  onSubmitChange1={this.onSubmitChange1}
+                  onTextChange={this.onTextChange}
+                />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/register"
+            render={() =>
+              this.state.logged ? (
+                <Redirect to="/" />
+              ) : (
+                <Register
+                  onSubmitChange2={this.onSubmitChange2}
+                  onTextChange={this.onTextChange}
+                />
+              )
+            }
+          />
+        </Switch>
       </Router>
     );
   }

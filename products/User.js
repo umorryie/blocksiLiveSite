@@ -3,7 +3,7 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 
-const Users = new Schema({
+const Users = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -63,6 +63,24 @@ async function checkUser(id, pw) {
 }
 checkUser("5ec7fb7f0c31755ad802df10", "fddr3sdd");
 */
+/*
+Users.statics.getUser = (password) => {
+  const user = this;
+  const aliJe = bcrypt.compare(password, user.password);
+  aliJe.then(console.log);
+  return aliJe;
+};
 
+Users.pre("save", (next) => {
+  const user = this;
+  console.log("not");
+
+  console.log(user.password);
+  console.log("this.", this.password);
+  console.log("bcrypta");
+  user.password = bcrypt.hash(user.password, 10);
+  console.log("naprej");
+  next();
+});*/
 const User = mongoose.model("User", Users);
 module.exports = User;

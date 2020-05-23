@@ -103,10 +103,11 @@ router.put("/users/:id", (req, res) => {
 
 // add new user to db
 router.post("/users", (req, res) => {
-  const { name, email, password, contacts } = req.body;
-
+  const { name, email, password } = req.body;
+  const contacts = [];
   const arayNames = ["name", "email", "password", "contacts"];
   const aray = [name, email, password, contacts];
+  console.log("notri v userja vpisat");
   const arrayy = aray.filter((el) => el !== undefined);
   if (arrayy.length < 3) {
     res.status(400).json("Not all parameters are  given.");
@@ -295,6 +296,26 @@ router.post("/checkLoginRegular/:email", async (req, res) => {
   } else {
     console.log(password, userr.password);
     (await userr.password) === password ? res.json(true) : res.json(false);
+  }
+});
+
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  try {
+    User.findOne({ email }).then((el) => {
+      if (!el) {
+        res.status(404).json("Error");
+        return;
+      }
+      const preveri = bcrypt
+        .compare(password, el.password)
+        .then((ress) => {
+          return ress ? res.json(true) : res.status(400).json(false);
+        })
+        .catch((e) => res.json(e));
+    });
+  } catch (e) {
+    res.status(404).json(e);
   }
 });
 module.exports = router;

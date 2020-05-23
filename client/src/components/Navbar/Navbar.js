@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-
+import Login from "../LogIn/Login";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 const Navbar = ({
   spremeni,
   changeclickLog,
@@ -33,14 +34,18 @@ const Navbar = ({
               </li>
             ) : (
               <li onClick={changeclickLog} className="linavbar">
-                LOG IN
+                <Link className="linky" to="/login">
+                  LOG IN
+                </Link>
               </li>
             )}
             {logged ? (
               ""
             ) : (
               <li onClick={changeClickRegister} className="linavbar">
-                REGISTER
+                <Link className="linky" to="/register">
+                  REGISTER
+                </Link>
               </li>
             )}
           </ul>
