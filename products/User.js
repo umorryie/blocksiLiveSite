@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const Schema = mongoose.Schema;
 
 const Users = new mongoose.Schema({
@@ -82,5 +83,14 @@ Users.pre("save", (next) => {
   console.log("naprej");
   next();
 });*/
+/*
+Users.pre("save", function (next) {
+  if (this.password) {
+    var salt = bcrypt.genSaltSync(10);
+    this.password = bcrypt.hashSync(this.password, salt);
+  }
+  next();
+});
+*/
 const User = mongoose.model("User", Users);
 module.exports = User;

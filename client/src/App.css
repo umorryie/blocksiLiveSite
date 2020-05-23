@@ -45,8 +45,9 @@
   color: rgb(219, 214, 214);
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
-.naslovnice fi {
-  font-size: 10px;
+.naslovnice {
+  font-size: 3vh !important;
+  color: rgb(48, 47, 51);
 }
 .contactContainer {
   margin: 20px;
@@ -60,7 +61,7 @@
   height: 3vh;
 
   border-radius: 20px;
-  border: grey;
+  border: solid rgb(218, 213, 213) !important;
   text-align: center;
   font-size: 2vh;
   font-weight: 600;

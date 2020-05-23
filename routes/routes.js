@@ -174,11 +174,19 @@ router.post("/users/contacts/:email", (req, res) => {
 //change users contact name
 router.put("/users/name/:email", (req, res) => {
   const { email } = req.params;
-  const { name, newName } = req.body;
+  const { name, newName, surrname, address, phoneNumber } = req.body;
   User.findOne({ email })
     .then((data) => {
-      aray = ChangeContact(newName, name, "name", data.contacts);
-
+      //aray = ChangeContact(newName, name, "name", data.contacts);
+      aray = ChangeContact(
+        newName,
+        name,
+        surrname,
+        address,
+        phoneNumber,
+        "name",
+        data.contacts
+      );
       data.contacts = [];
       data.contacts = aray;
 
@@ -191,11 +199,19 @@ router.put("/users/name/:email", (req, res) => {
 //change users contact surrname
 router.put("/users/surrname/:email", (req, res) => {
   const { email } = req.params;
-  const { name, newName } = req.body;
+  const { name, newName, surrname, phoneNumber, address } = req.body;
   User.findOne({ email })
     .then((data) => {
-      aray = ChangeContact(newName, name, "surrname", data.contacts);
-
+      //aray = ChangeContact(newName, name, "surrname", data.contacts);
+      aray = ChangeContact(
+        newName,
+        name,
+        surrname,
+        address,
+        phoneNumber,
+        "surrname",
+        data.contacts
+      );
       data.contacts = [];
       data.contacts = aray;
 
@@ -208,11 +224,19 @@ router.put("/users/surrname/:email", (req, res) => {
 //change users contact adress
 router.put("/users/address/:email", (req, res) => {
   const { email } = req.params;
-  const { name, newName } = req.body;
+  const { name, newName, surrname, phoneNumber, address } = req.body;
   User.findOne({ email: email })
     .then((data) => {
-      aray = ChangeContact(newName, name, "address", data.contacts);
-
+      //aray = ChangeContact(newName, name, "address", data.contacts);
+      aray = ChangeContact(
+        newName,
+        name,
+        surrname,
+        address,
+        phoneNumber,
+        "address",
+        data.contacts
+      );
       data.contacts = [];
       data.contacts = aray;
 
@@ -225,10 +249,19 @@ router.put("/users/address/:email", (req, res) => {
 //change users contact phone
 router.put("/users/phoneNumber/:email", (req, res) => {
   const { email } = req.params;
-  const { name, newName } = req.body;
+  const { name, newName, surrname, phoneNumber, address } = req.body;
   User.findOne({ email: email })
     .then((data) => {
-      aray = ChangeContact(newName, name, "phoneNumber", data.contacts);
+      aray = ChangeContact(
+        newName,
+        name,
+        surrname,
+        address,
+        phoneNumber,
+        "phoneNumber",
+        data.contacts
+      );
+      //aray = ChangeContact(newName, name, "phoneNumber", data.contacts);
 
       data.contacts = [];
       data.contacts = aray;
@@ -266,10 +299,23 @@ const deleteContact = (name1, name2, change, aray) => {
   return array;
 };
 
-const ChangeContact = (newName, name, change, aray) => {
+const ChangeContact = (
+  newName,
+  name,
+  surrname,
+  address,
+  phoneNumber,
+  change,
+  aray
+) => {
   const array = aray.map((el, i) => {
     let word = el;
-    if (el[change] === name) {
+    if (
+      el.name === name &&
+      el.surrname === surrname &&
+      el.phoneNumber === phoneNumber &&
+      el.address === address
+    ) {
       word[change] = newName;
     }
     return word;
@@ -306,7 +352,7 @@ router.post("/login", (req, res) => {
   try {
     User.findOne({ email }).then((el) => {
       if (!el) {
-        res.status(404).json("Error");
+        res.status(404).json("Error, no user");
         return;
       }
       const preveri = bcrypt
@@ -314,7 +360,7 @@ router.post("/login", (req, res) => {
         .then((ress) => {
           return ress ? res.json(true) : res.status(400).json(false);
         })
-        .catch((e) => res.json(e));
+        .catch((e) => res.status(400).json(e));
     });
   } catch (e) {
     res.status(404).json(e);

@@ -17,7 +17,15 @@ export default class Table extends Component {
         <th className="th2">
           {this.props.name}
           <FontAwesomeIcon
-            onClick={() => this.props.window("name", this.props.name)}
+            onClick={() =>
+              this.props.window(
+                "name",
+                this.props.name,
+                this.props.surrname,
+                this.props.address,
+                this.props.phoneNumber
+              )
+            }
             className="plusCircle1"
             size="1x"
             color="green"
@@ -27,7 +35,15 @@ export default class Table extends Component {
         <th className="th2">
           {this.props.surrname}
           <FontAwesomeIcon
-            onClick={() => this.props.window("surrname", this.props.surrname)}
+            onClick={() =>
+              this.props.window(
+                "surrname",
+                this.props.name,
+                this.props.surrname,
+                this.props.address,
+                this.props.phoneNumber
+              )
+            }
             className="plusCircle1"
             size="1x"
             color="green"
@@ -37,7 +53,15 @@ export default class Table extends Component {
         <th className="th2">
           {this.props.address}
           <FontAwesomeIcon
-            onClick={() => this.props.window("address", this.props.address)}
+            onClick={() =>
+              this.props.window(
+                "address",
+                this.props.name,
+                this.props.surrname,
+                this.props.address,
+                this.props.phoneNumber
+              )
+            }
             className="plusCircle1"
             size="1x"
             color="green"
@@ -48,7 +72,13 @@ export default class Table extends Component {
           {this.props.phoneNumber}
           <FontAwesomeIcon
             onClick={() =>
-              this.props.window("phoneNumber", this.props.phoneNumber)
+              this.props.window(
+                "phoneNumber",
+                this.props.name,
+                this.props.surrname,
+                this.props.address,
+                this.props.phoneNumber
+              )
             }
             className="plusCircle1"
             size="1x"

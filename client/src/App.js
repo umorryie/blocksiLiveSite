@@ -187,6 +187,7 @@ export default class App extends Component {
 
     const { passwordforLogin, emailforLogin } = this.state;
     const object = { password: passwordforLogin };
+    const objectNew = { password: passwordforLogin, email: emailforLogin };
     fetch(`/checkLoginRegular/${emailforLogin}`, {
       method: "post",
       mode: "cors", // no-cors, *cors, same-origin
@@ -229,20 +230,26 @@ export default class App extends Component {
   changeclickLog = () => {
     this.setState({ clickLog: !this.state.clickLog });
   };
-  window = (prop, newword) => {
+  window = (prop, name, surrname, address, phoneNumber) => {
     const tekst = prompt(`Enter new ${prop}: `);
-    const objekt = { name: newword, newName: tekst };
-    fetch(`/users/${prop}/${this.state.email}`, {
-      method: "put",
-      mode: "cors", // no-cors, *cors, same-origin
-      headers: {
-        "Content-Type": "application/json",
-      },
+    if (tekst === null || tekst === undefined || tekst === "") {
+      if (tekst === "") {
+        alert("Text can not be empty");
+      }
+    } else {
+      const objekt = { name, surrname, address, phoneNumber, newName: tekst };
+      fetch(`/users/${prop}/${this.state.email}`, {
+        method: "put",
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      body: JSON.stringify(objekt),
-    });
-    this.refresh();
-    this.refresh();
+        body: JSON.stringify(objekt),
+      });
+      this.refresh();
+      this.refresh();
+    }
   };
 
   render() {
@@ -335,7 +342,7 @@ export default class App extends Component {
                           <thead>
                             <tr id="contacts-head">
                               <th className="th naslovnice">NAME</th>
-                              <th className="th naslovnice">SURNAME</th>
+                              <th className="th naslovnice">SURRNAME</th>
                               <th className="th naslovnice">ADDRESS</th>
                               <th className="th naslovnice">PHONE NUMBER</th>
                               <th className="th naslovnice"></th>
